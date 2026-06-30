@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>elabskenya link shortener - Free URL Shortener try it now</title>
+    <meta name="description" content="elabskenya link shortener - Free URL Shortener try it now"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23667eea'%3E%3Cpath d='M10.59 13.41c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0L15 11.41V15h2V9h-6v2h3.59l-4 4z'/%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z'/%3E%3C/svg%3E" type="image/svg+xml">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 15px;
+            color: #333;
+            position: relative;
+        }
+        
+        .container {
+            background: white;
+            padding: 35px 25px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 480px;
+            text-align: center;
+            z-index: 1;
+        }
+        
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .logo {
+            font-size: 2.6rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        p { 
+            color: #666; 
+            margin-bottom: 25px; 
+            font-size: 1.05rem; 
+        }
+
+        /* Social Icons */
+        .social-top {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .social-top a, .social-float a {
+            width: 46px;
+            height: 46px;
+            background: white;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+            font-size: 1.4rem;
+            transition: all 0.3s;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .social-top a:hover, .social-float a:hover {
+            transform: scale(1.15);
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .social-float {
+            display: none;
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            flex-direction: column;
+            gap: 12px;
+            z-index: 100;
+        }
+
+        .input-group { margin-bottom: 20px; }
+        
+        input {
+            width: 100%;
+            padding: 15px 18px;
+            font-size: 1.05rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+        
+        button {
+            width: 100%;
+            padding: 16px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        button:disabled { opacity: 0.75; cursor: not-allowed; }
+
+        .spinner {
+            display: none;
+            width: 24px;
+            height: 24px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 12px;
+            border: 2px dashed #667eea;
+            display: none;
+        }
+        
+        .short-url {
+            font-size: 1.22rem;
+            font-weight: 600;
+            color: #667eea;
+            word-break: break-all;
+            margin: 12px 0;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+        }
+        
+        .copy-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            margin-top: 8px;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.9);
+            font-size: 0.82rem;
+            z-index: 10;
+        }
+
+        /* Responsive Adjustments */
+        @media (min-width: 768px) {
+            .social-top { display: none; }
+            .social-float { display: flex; }
+            .container { padding: 45px 35px; }
+        }
+
+        @media (max-width: 480px) {
+            .container { 
+                padding: 30px 20px; 
+                margin: 8px;
+            }
+            h1 { font-size: 2.1rem; }
+            .logo { font-size: 2.3rem; }
+            .social-top a {
+                width: 42px;
+                height: 42px;
+                font-size: 1.25rem;
+            }
+            input { font-size: 1rem; padding: 14px 16px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="logo">🔗</span>
+            <h1>Elabs ShortLinks</h1>
+        </div>
+        <p>Make your long links short and shareable</p>
+
+        <div class="social-top">
+            <a href="https://twitter.com" target="_blank"><i class="fab fa-x-twitter"></i></a>
+            <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://linkedin.com" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com" target="_blank"><i class="fab fa-github"></i></a>
+        </div>
+        
+        <form id="shortenForm">
+            <div class="input-group">
+                <input 
+                    type="url" 
+                    name="url" 
+                    id="urlInput"
+                    placeholder="Paste your long URL here..." 
+                    required>
+            </div>
+            <button type="submit" id="submitBtn">
+                <span id="btnText">✨ Shorten URL</span>
+                <span class="spinner" id="spinner"></span>
+            </button>
+        </form>
+
+        <div class="result" id="result">
+            <p>Your shortened link is ready!</p>
+            <div class="short-url" id="shortUrl"></div>
+            <button class="copy-btn" onclick="copyToClipboard()">📋 Copy Link</button>
+        </div>
+    </div>
+
+    <div class="social-float">
+        <a href="https://x.com/eliezerkenya" target="_blank"><i class="fab fa-x-twitter"></i></a>
+        <a href="https://facebook.com/eliezerkenya" target="_blank"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://instagram.com/eliezerkenya" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://github.com/eliezerke" target="_blank"><i class="fab fa-github"></i></a>
+    </div>
+
+    <footer>
+        Powered by <a style="color: whitesmoke" href="https://elabskenya.pythonanywhere.com/support" target="_blank"> elabskenya </a> from <a style="color: whitesmoke" href="https://eliezerkenya.pythonanywhere.com" target="_blank"> eliezerkenya</a>
+    </footer>
+
+    <script>
+        const form = document.getElementById('shortenForm');
+        const resultDiv = document.getElementById('result');
+        const shortUrlEl = document.getElementById('shortUrl');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+        const spinner = document.getElementById('spinner');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            submitBtn.disabled = true;
+            btnText.style.display = 'none';
+            spinner.style.display = 'inline-block';
+
+            const formData = new FormData(form);
+            
+            try {
+                const response = await fetch('/shorten', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.short_url) {
+                    shortUrlEl.textContent = data.short_url;
+                    resultDiv.style.display = 'block';
+                    resultDiv.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    alert(data.error || 'Something went wrong');
+                }
+            } catch (err) {
+                alert('Failed to connect to server');
+            } finally {
+                submitBtn.disabled = false;
+                btnText.style.display = 'inline';
+                spinner.style.display = 'none';
+            }
+        });
+
+        function copyToClipboard() {
+            const text = shortUrlEl.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                const original = btn.textContent;
+                btn.textContent = '✅ Copied succesfully!';
+                setTimeout(() => btn.textContent = original, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
