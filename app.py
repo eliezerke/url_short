@@ -4,6 +4,7 @@ from firebase_admin import credentials, db
 import string
 import random
 import os, dotenv
+import json
 
 dotenv.load_dotenv()
 
@@ -12,8 +13,10 @@ app = Flask(__name__)
 # ====================== Firebase Setup ======================
 firebase_initialized = False
 
+dta = os.getenv("ENV_KEY_ONE", "")
+
 try:
-        cred = credentials.Certificate(os.getenv("ENV_KEY_ONE", ""))
+        cred = credentials.Certificate(json.loads(dta))
         firebase_admin.initialize_app(cred, {
             'databaseURL': os.getenv("FB_URL", "")  # ← CHANGE THIS
         })
